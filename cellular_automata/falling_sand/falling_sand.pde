@@ -18,7 +18,7 @@ void mousePressed() {
 
 void draw() {
   if (w.faucet) {
-    int cX = width / 3;
+    int cX = 20;
     int cY = 3;
     
     for (int i=0; i< 5; i++ ) {
@@ -29,7 +29,7 @@ void draw() {
       }
     }
     
-    cX = width / 3 * 2;
+    cX = width - 20;
     for (int i=0; i< 5; i++ ) {
       if (w.getpix(cX + i * 2, cY) == black) {
         w.setpix(cX + i * 2, cY, 0);
@@ -55,23 +55,10 @@ class Grain {
   void run() {
     // 1% of the time, refuse to move
     if (random(100) > 99) return;
-
-    while(x < 0) {
-      x+=width;
-    }
-    while(x > width - 1) {
-      x-=width;
-    }
-    while(y < 0) {
-      y+=height;
-    }
-    while(y > height - 1) {
-      y-=height;
-    }
     
-    if (w.getpix(x, y + 1) == black) move(0, 1);
-    else if ((w.pressure(x, y) > 1) && (w.getpix(x - 1, y) == black)) move(-1, 0);
-    else if ((w.pressure(x, y) > 1) && (w.getpix(x + 1, y) == black)) move(1, 0);
+    if      (w.valid_coordinates(x, y + 1) && (w.getpix(x, y + 1) == black)) move(0, 1);
+    else if (w.valid_coordinates(x - 1, y) && (w.pressure(x, y) > 1) && (w.getpix(x - 1, y) == black)) move(-1, 0);
+    else if (w.valid_coordinates(x + 1, y) && (w.pressure(x, y) > 1) && (w.getpix(x + 1, y) == black)) move(1, 0);
     else {
       w.setpix(x, y,31);
     }
@@ -108,12 +95,11 @@ class World {
     }
   }
   
+  boolean valid_coordinates(int x, int y) {
+    return((x >= 0) && (x < width) && (y >= 0) && (y < height));
+  }
+  
   void setpix(int x, int y, int c) {
-    while(x < 0) x+=width;
-    while(x > width - 1) x-=width;
-    while(y < 0) y+=height;
-    while(y > height - 1) y-=height;
-
     if (c != wall && c != black) {
       c = int(pressure(x, y)) * 10 + 65;
       c = color(c,c,c);
@@ -140,7 +126,6 @@ class World {
   }
   
   float pressure(int x, int y) {
-
     while(x < 0) x+=width;
     while(x > width - 1) x-=width;
     while(y < 0) y+=height;
