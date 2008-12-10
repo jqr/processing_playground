@@ -2,41 +2,22 @@ World w;
 int maxgrains = 80000;
 int grain_count;
 Grain[] grains = new Grain[maxgrains];
-color wall;
 color black = color(0, 0, 0);
-// set lower for smoother animation, higher for faster simulation
-int runs_per_loop = 1000;
-boolean faucet = true;
 
-void setup()
-{
+void setup() {
   size(640, 200, P2D);
   frameRate(60);
-  clearscr();
+  background(0);
   w = new World();
-  wall = color(255, 0, 0);
   grain_count = 0;
-  seed();
-}
-
-void seed() {
-  for (int i = 0; i < 100; i++) {
-    int cX = int(random(width));
-    int cY = int(random(height - 40)) + 40;
-    float r = random(1);
-
-    for (int z = 0; z < 30; z++) {
-      w.setpix(cX + z, cY, wall);
-    }
-  }
 }
 
 void mousePressed() {
-  faucet = !faucet;
+  w.toggle_facuet();
 }
 
 void draw() {
-  if (faucet) {
+  if (w.faucet) {
     int cX = width / 3;
     int cY = 3;
     
@@ -63,14 +44,6 @@ void draw() {
   }
 }
 
-void clearscr() {
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
-      set(x, y, color(0));
-    }
-  }
-}
-
 class Grain {
   int x, y;
   
@@ -80,8 +53,9 @@ class Grain {
   }
 
   void run() {
-     if (random(100) > 99) return;
-    // Fix grain coordinates
+    // 1% of the time, refuse to move
+    if (random(100) > 99) return;
+
     while(x < 0) {
       x+=width;
     }
@@ -115,6 +89,24 @@ class Grain {
 }
 
 class World {
+  boolean faucet;
+  color wall = color(255, 0, 0);
+  
+  World() {
+    faucet = true;
+    add_obstacles();
+  }
+  
+  void add_obstacles() {
+    for (int i = 0; i < 100; i++) {
+      int x = int(random(width));
+      int y = int(random(height - 40)) + 40;
+
+      for (int z = 0; z < 30; z++) {
+        setpix(x + z, y, wall);
+      }
+    }
+  }
   
   void setpix(int x, int y, int c) {
     while(x < 0) x+=width;
@@ -141,6 +133,10 @@ class World {
     int p = 0;
     p = get(x, y);
     return (p == black) || (p == wall);
+  }
+  
+  void toggle_facuet() {
+    faucet = !faucet;
   }
   
   float pressure(int x, int y) {
