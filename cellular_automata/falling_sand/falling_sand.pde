@@ -3,11 +3,11 @@ int maxgrains = 800000;
 int grain_count;
 Grain[] grains = new Grain[maxgrains];
 color black = color(0, 0, 0);
-int cycles_per_frame = 5;
+int cycles_per_frame = 1;
 
 void setup() {
   size(480, 480, P2D);
-  frameRate(60);
+  frameRate(30);
   background(0);
   w = new World();
   grain_count = 0;
@@ -66,7 +66,7 @@ class Grain {
 
 class World {
   boolean faucet;
-  int faucet_strength = 50;
+  int faucet_strength = 1;
   color wall = color(255, 0, 0);
   
   World() {
@@ -75,9 +75,11 @@ class World {
   }
   
   void add_obstacles() {
+    int buffer = 100;
+    
     for (int i = 0; i < 100; i++) {
       int x = int(random(width));
-      int y = int(random(height - 40)) + 40;
+      int y = int(random(height - buffer)) + 40 + buffer;
 
       for (int z = 0; z < 30; z++) {
         setpix(x + z, y, wall);

@@ -1,7 +1,7 @@
 import processing.video.*;
 
 // Size of each cell in the grid
-int cellSize = 20;
+int cellSize = 15;
 // Number of columns and rows in our system
 int cols, rows;
 // Variable for capture device
