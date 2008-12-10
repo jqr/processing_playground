@@ -1,7 +1,7 @@
 World w;
-int maxcells = 80000;
-int numcells;
-Cell[] cells = new Cell[maxcells];
+int maxgrains = 80000;
+int grain_count;
+Grain[] grains = new Grain[maxgrains];
 color wall;
 color black = color(0, 0, 0);
 // set lower for smoother animation, higher for faster simulation
@@ -15,7 +15,7 @@ void setup()
   clearscr();
   w = new World();
   wall = color(255, 0, 0);
-  numcells = 0;
+  grain_count = 0;
   seed();
 }
 
@@ -37,29 +37,29 @@ void mousePressed() {
 
 void draw() {
   if (faucet) {
-    int cX = width / 2;
+    int cX = width / 3;
     int cY = 3;
     
     for (int i=0; i< 5; i++ ) {
       if (w.getpix(cX + i, cY) == black) {
         w.setpix(cX + i, cY, 0);
-        cells[numcells] = new Cell(cX + i, cY);
-        numcells++;
+        grains[grain_count] = new Grain(cX + i, cY);
+        grain_count++;
       }
     }
     
-    cX = width / 2 + 15;
+    cX = width / 3 * 2;
     for (int i=0; i< 5; i++ ) {
-      if (w.getpix(cX + i, cY) == black) {
-        w.setpix(cX + i, cY, 0);
-        cells[numcells] = new Cell(cX + i, cY);
-        numcells++;
+      if (w.getpix(cX + i * 2, cY) == black) {
+        w.setpix(cX + i * 2, cY, 0);
+        grains[grain_count] = new Grain(cX + i * 2, cY);
+        grain_count++;
       }
     }
   }
   
-  for (int i = 0; i < numcells; i++) {
-    cells[i].run();
+  for (int i = 0; i < grain_count; i++) {
+    grains[i].run();
   }
 }
 
@@ -71,17 +71,17 @@ void clearscr() {
   }
 }
 
-class Cell {
+class Grain {
   int x, y;
   
-  Cell(int start_x, int start_y) {
+  Grain(int start_x, int start_y) {
     x = start_x;
     y = start_y;
   }
 
   void run() {
      if (random(100) > 99) return;
-    // Fix cell coordinates
+    // Fix grain coordinates
     while(x < 0) {
       x+=width;
     }
@@ -137,6 +137,12 @@ class World {
     return get(x, y);
   }
   
+  boolean has_spore(int x, int y) {
+    int p = 0;
+    p = get(x, y);
+    return (p == black) || (p == wall);
+  }
+  
   float pressure(int x, int y) {
 
     while(x < 0) x+=width;
@@ -155,12 +161,6 @@ class World {
       pressure_at(x    , y - 1, depth + 1) +
       pressure_at(x + 1, y - 1, depth + 1)
     )/3 + 1;
-  }
-
-  boolean has_spore(int x, int y) {
-    int p = 0;
-    p = get(x, y);
-    return (p == black) || (p == wall);
   }
 
   int pressure_above(int x, int y) {
