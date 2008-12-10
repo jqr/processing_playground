@@ -12,8 +12,16 @@ void setup() {
   grain_count = 0;
 }
 
-void mousePressed() {
-  w.toggle_facuet();
+void keyPressed() {
+  if (key == CODED) {
+    if (keyCode == UP) {
+      w.change_faucet(1);
+    } else if (keyCode == DOWN) {
+      w.change_faucet(-1);
+    } 
+  } else {
+    w.toggle_facuet();
+  }
 }
 
 void draw() {
@@ -21,7 +29,7 @@ void draw() {
     int cX = 20;
     int cY = 3;
     
-    for (int i=0; i< 5; i++ ) {
+    for (int i=0; i < w.faucet_strength; i++ ) {
       if (w.getpix(cX + i, cY) == black) {
         w.setpix(cX + i, cY, 0);
         grains[grain_count] = new Grain(cX + i, cY);
@@ -30,7 +38,7 @@ void draw() {
     }
     
     cX = width - 20;
-    for (int i=0; i< 5; i++ ) {
+    for (int i=0; i < w.faucet_strength; i++ ) {
       if (w.getpix(cX + i * 2, cY) == black) {
         w.setpix(cX + i * 2, cY, 0);
         grains[grain_count] = new Grain(cX + i * 2, cY);
@@ -77,6 +85,7 @@ class Grain {
 
 class World {
   boolean faucet;
+  int faucet_strength = 1;
   color wall = color(255, 0, 0);
   
   World() {
@@ -97,6 +106,10 @@ class World {
   
   boolean valid_coordinates(int x, int y) {
     return((x >= 0) && (x < width) && (y >= 0) && (y < height));
+  }
+  
+  void change_faucet(int delta) {
+    faucet_strength += delta;
   }
   
   void setpix(int x, int y, int c) {
