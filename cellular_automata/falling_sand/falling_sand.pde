@@ -1,12 +1,12 @@
 World w;
-int maxgrains = 80000;
+int maxgrains = 800000;
 int grain_count;
 Grain[] grains = new Grain[maxgrains];
 color black = color(0, 0, 0);
-int cycles_per_frame = 2;
+int cycles_per_frame = 5;
 
 void setup() {
-  size(640, 200, P2D);
+  size(480, 480, P2D);
   frameRate(60);
   background(0);
   w = new World();
@@ -45,13 +45,13 @@ class Grain {
 
   void run() {
     // 1% of the time, refuse to move
-    if (random(100) > 99) return;
+    if (random(1000) > 995) return;
     
     if      (w.could_move(x, y + 1)                          ) move(+0, 1);
     else if (w.could_move(x - 1, y) && (w.pressure(x, y) > 0)) move(-1, 0);
     else if (w.could_move(x + 1, y) && (w.pressure(x, y) > 0)) move(+1, 0);
     else {
-      w.setpix(x, y, 1); // force a pixel redraw
+      // w.setpix(x, y, 1); // force a pixel redraw
     }
 
   }
@@ -91,9 +91,9 @@ class World {
       int cY = 3;
 
       for (int i=0; i < w.faucet_strength; i++ ) {
-        if (w.getpix(cX + i, cY) == black) {
-          w.setpix(cX + i, cY, 0);
-          grains[grain_count] = new Grain(cX + i, cY);
+        if (w.getpix(cX + i * 2, cY) == black) {
+          w.setpix(cX + i * 2, cY, 0);
+          grains[grain_count] = new Grain(cX + i * 2, cY);
           grain_count++;
         }
       }
@@ -123,17 +123,13 @@ class World {
   
   void setpix(int x, int y, color c) {
     if (c != wall && c != black) {
-      if (pressure(x, y) > 0) c = color(200, 200, 200);
-      else                    c = color(100, 100, 100);
+      int pc = int(pressure(x, y) * 30 + 100);
+      c = color(pc, pc, pc);
     }
     set(x, y, c);
   }
   
   color getpix(int x, int y) {
-    while(x < 0) x+=width;
-    while(x > width - 1) x-=width;
-    while(y < 0) y+=height;
-    if (y > height - 1) return(1);
     return get(x, y);
   }
   
@@ -148,7 +144,7 @@ class World {
   }
   
   float pressure(int x, int y) {
-    if (has_grain(x, y - 1)) return(1);
+    if (has_grain(x    , y - 1)) return(1);
     return(0);
   }
 }
