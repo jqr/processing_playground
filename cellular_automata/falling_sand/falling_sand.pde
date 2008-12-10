@@ -47,22 +47,20 @@ class Grain {
     // 1% of the time, refuse to move
     if (random(100) > 99) return;
     
-    if      (w.valid_coordinates(x, y + 1) && (w.getpix(x, y + 1) == black)) move(0, 1);
-    else if (w.valid_coordinates(x - 1, y) && (w.pressure(x, y) > 1) && (w.getpix(x - 1, y) == black)) move(-1, 0);
-    else if (w.valid_coordinates(x + 1, y) && (w.pressure(x, y) > 1) && (w.getpix(x + 1, y) == black)) move(1, 0);
+    if      (w.could_move(x, y + 1)                          ) move(+0, 1);
+    else if (w.could_move(x - 1, y) && (w.pressure(x, y) > 0)) move(-1, 0);
+    else if (w.could_move(x + 1, y) && (w.pressure(x, y) > 0)) move(+1, 0);
     else {
-      w.setpix(x, y,31);
+      w.setpix(x, y, 1); // force a pixel redraw
     }
 
   }
   
   void move(int dx, int dy) {
-    if (w.getpix(x + dx, y + dy) == black) {
-      w.setpix(x + dx, y + dy, w.getpix(x, y));
-      w.setpix(x, y, color(0));
-      x += dx;
-      y += dy;
-    }
+    w.setpix(x, y, black);
+    x += dx;
+    y += dy;
+    w.setpix(x, y, 1);
   }
 }
 
@@ -115,14 +113,18 @@ class World {
     return((x >= 0) && (x < width) && (y >= 0) && (y < height));
   }
   
+  boolean could_move(int x, int y) {
+    return(valid_coordinates(x, y) && getpix(x, y) == black);
+  }
+  
   void change_faucet(int delta) {
     faucet_strength += delta;
   }
   
-  void setpix(int x, int y, int c) {
+  void setpix(int x, int y, color c) {
     if (c != wall && c != black) {
-      c = int(pressure(x, y)) * 10 + 65;
-      c = color(c,c,c);
+      if (pressure(x, y) > 0) c = color(200, 200, 200);
+      else                    c = color(100, 100, 100);
     }
     set(x, y, c);
   }
@@ -138,7 +140,7 @@ class World {
   boolean has_spore(int x, int y) {
     int p = 0;
     p = get(x, y);
-    return (p == black) || (p == wall);
+    return !((p == black) || (p == wall));
   }
   
   void toggle_facuet() {
@@ -150,13 +152,20 @@ class World {
     while(x > width - 1) x-=width;
     while(y < 0) y+=height;
     while(y > height - 1) y-=height;
-    return max(pressure_above(x - 1, y), pressure_above(x, y - 1), pressure_above(x + 1, y -1));
-//    return(pressure_at(x, y, 0));
+    return pressure_above(x, y);
+    // return max(pressure_above(x - 1, y - 1), pressure_above(x, y), pressure_above(x + 1, y - 1));
+    // return(pressure_at(x, y, 0));
   }
   
+  int pressure_above(int x, int y) {
+    if (has_spore(x, y - 2)) return(2);
+    if (has_spore(x, y - 1)) return(1);
+    return(0);
+  }
+
   float pressure_at(int x, int y, int depth) {
     if (has_spore(x, y)) return 0;
-    if (depth > 2) return 0;
+    if (depth > 1) return 0;
     return (
       pressure_at(x - 1, y - 1, depth + 1) +
       pressure_at(x    , y - 1, depth + 1) +
@@ -164,12 +173,6 @@ class World {
     )/3 + 1;
   }
 
-  int pressure_above(int x, int y) {
-    for (int i = 0; i < y; i++) {
-      if (has_spore(x, y - i)) return(i);
-    }
-    return(0);
-  }
     
 }
 
