@@ -1,4 +1,3 @@
-
 import processing.video.*;
 
 // Size of each cell in the grid
