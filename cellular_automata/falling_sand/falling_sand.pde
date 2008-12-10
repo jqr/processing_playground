@@ -137,7 +137,7 @@ class World {
     return get(x, y);
   }
   
-  boolean has_spore(int x, int y) {
+  boolean has_grain(int x, int y) {
     int p = 0;
     p = get(x, y);
     return !((p == black) || (p == wall));
@@ -148,31 +148,8 @@ class World {
   }
   
   float pressure(int x, int y) {
-    while(x < 0) x+=width;
-    while(x > width - 1) x-=width;
-    while(y < 0) y+=height;
-    while(y > height - 1) y-=height;
-    return pressure_above(x, y);
-    // return max(pressure_above(x - 1, y - 1), pressure_above(x, y), pressure_above(x + 1, y - 1));
-    // return(pressure_at(x, y, 0));
-  }
-  
-  int pressure_above(int x, int y) {
-    if (has_spore(x, y - 2)) return(2);
-    if (has_spore(x, y - 1)) return(1);
+    if (has_grain(x, y - 1)) return(1);
     return(0);
   }
-
-  float pressure_at(int x, int y, int depth) {
-    if (has_spore(x, y)) return 0;
-    if (depth > 1) return 0;
-    return (
-      pressure_at(x - 1, y - 1, depth + 1) +
-      pressure_at(x    , y - 1, depth + 1) +
-      pressure_at(x + 1, y - 1, depth + 1)
-    )/3 + 1;
-  }
-
-    
 }
 
