@@ -3,6 +3,7 @@ int maxgrains = 80000;
 int grain_count;
 Grain[] grains = new Grain[maxgrains];
 color black = color(0, 0, 0);
+int cycles_per_frame = 2;
 
 void setup() {
   size(640, 200, P2D);
@@ -25,30 +26,12 @@ void keyPressed() {
 }
 
 void draw() {
-  if (w.faucet) {
-    int cX = 20;
-    int cY = 3;
-    
-    for (int i=0; i < w.faucet_strength; i++ ) {
-      if (w.getpix(cX + i, cY) == black) {
-        w.setpix(cX + i, cY, 0);
-        grains[grain_count] = new Grain(cX + i, cY);
-        grain_count++;
-      }
-    }
-    
-    cX = width - 20;
-    for (int i=0; i < w.faucet_strength; i++ ) {
-      if (w.getpix(cX + i * 2, cY) == black) {
-        w.setpix(cX + i * 2, cY, 0);
-        grains[grain_count] = new Grain(cX + i * 2, cY);
-        grain_count++;
-      }
-    }
-  }
+  for (int z=0; z<cycles_per_frame; z++) {
+    w.draw();
   
-  for (int i = 0; i < grain_count; i++) {
-    grains[i].run();
+    for (int i = 0; i < grain_count; i++) {
+      grains[i].run();
+    }
   }
 }
 
@@ -85,7 +68,7 @@ class Grain {
 
 class World {
   boolean faucet;
-  int faucet_strength = 1;
+  int faucet_strength = 50;
   color wall = color(255, 0, 0);
   
   World() {
@@ -100,6 +83,30 @@ class World {
 
       for (int z = 0; z < 30; z++) {
         setpix(x + z, y, wall);
+      }
+    }
+  }
+  
+  void draw() {
+    if (faucet) {
+      int cX = 20;
+      int cY = 3;
+
+      for (int i=0; i < w.faucet_strength; i++ ) {
+        if (w.getpix(cX + i, cY) == black) {
+          w.setpix(cX + i, cY, 0);
+          grains[grain_count] = new Grain(cX + i, cY);
+          grain_count++;
+        }
+      }
+
+      cX = width - 20;
+      for (int i=0; i < w.faucet_strength; i++ ) {
+        if (w.getpix(cX - i * 2, cY) == black) {
+          w.setpix(cX - i * 2, cY, 0);
+          grains[grain_count] = new Grain(cX - i * 2, cY);
+          grain_count++;
+        }
       }
     }
   }
