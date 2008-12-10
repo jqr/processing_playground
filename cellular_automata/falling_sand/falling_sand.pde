@@ -44,7 +44,7 @@ class Grain {
   }
 
   void run() {
-    // 1% of the time, refuse to move
+    // 0.5% of the time, refuse to move
     if (random(1000) > 995) return;
     
     if      (w.could_move(x, y + 1)                          ) move(+0, 1);
