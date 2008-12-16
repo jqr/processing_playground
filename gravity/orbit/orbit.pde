@@ -10,7 +10,6 @@ void setup() {
   frameRate(30);
   background(0);
   body_count = 0;
-  stroke(200);
 }
 
 void keyPressed() {
@@ -19,7 +18,9 @@ void keyPressed() {
 }
 
 void draw() {
-  // background(0);
+  noStroke();
+  fill(0,0,0, 10);
+  rect(0, 0, width, height);
   frame++;
   for (int z=0; z<cycles_per_frame; z++) {
     for (int i = 0; i < body_count; i++) {
@@ -49,8 +50,8 @@ class Body {
       if (i != n) {
         float angle = atan2(y - bodies[i].y, x - bodies[i].x) + PI;
         float distance = dist(x, y, bodies[i].x, bodies[i].y);
-        float ddx = 10000 * cos(angle) * bodies[i].weight / weight / (distance*distance*distance);
-        float ddy = 10000 * sin(angle) * bodies[i].weight / weight / (distance*distance*distance);
+        float ddx = 300 * cos(angle) * bodies[i].weight / weight / (distance*distance);
+        float ddy = 300 * sin(angle) * bodies[i].weight / weight / (distance*distance);
         if (ddx >  0.2) ddx =  0.2;
         if (ddx < -0.2) ddx = -0.2;
         if (ddy >  0.2) ddy =  0.2;
