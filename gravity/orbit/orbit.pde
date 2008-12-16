@@ -2,7 +2,7 @@ int max_bodies = 800000;
 int body_count;
 Body[] bodies = new Body[max_bodies];
 color black = color(0, 0, 0);
-int cycles_per_frame = 1;
+int cycles_per_frame = 2;
 int frame = 0;
 
 void setup() {
@@ -50,8 +50,8 @@ class Body {
       if (i != n) {
         float angle = atan2(y - bodies[i].y, x - bodies[i].x) + PI;
         float distance = dist(x, y, bodies[i].x, bodies[i].y);
-        float ddx = 300 * cos(angle) * bodies[i].weight / weight / (distance*distance);
-        float ddy = 300 * sin(angle) * bodies[i].weight / weight / (distance*distance);
+        float ddx = 300 * cos(angle) * bodies[i].weight / weight / (distance*distance) / body_count;
+        float ddy = 300 * sin(angle) * bodies[i].weight / weight / (distance*distance) / body_count;
         if (ddx >  0.2) ddx =  0.2;
         if (ddx < -0.2) ddx = -0.2;
         if (ddy >  0.2) ddy =  0.2;
