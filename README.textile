@@ -1,26 +1,31 @@
+h1. Processing Playground
+
 Just some hacks related to the Processing language.
+
+h2. Instructions
 
 You'll need to download Processing to use these sketches:
   http://www.processing.org/download/
   
 Right now I just copy/paste them into the sketch player and press Play.
 
+h2. Sketches
 
-Falling Sand
+h3. Falling Sand
   Simulates sand falling on various platforms.
   
-  !screenshots/falling_sand.png!
+  !http://github.com/jqr/processing_playground/raw/master/screenshots/falling_sand.png!
   
-Turning Squares
+h3. Turning Squares
   Video input is used with a real-time filter.
 
-  !screenshots/turning_squares.png!  
+  !http://github.com/jqr/processing_playground/raw/master/screenshots/turning_squares.png!
   
-Video Sand
+h3. Video Sand
   Video input is used to interact with falling sand.
 
-  !screenshots/video_sand.png!
+  !http://github.com/jqr/processing_playground/raw/master/screenshots/video_sand.png!
 
-Orbit
+h3. Orbit
   Orbiting pixels, if it wasn't broken!
 
