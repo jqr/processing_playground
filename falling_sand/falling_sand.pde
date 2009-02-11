@@ -1,3 +1,9 @@
+// Simulates sand falling on various platforms.
+//
+// Keys:
+//   Up and down arrows increase and decrease the sand flow
+//   Everything else toggles the sand faucet
+
 World w;
 int maxgrains = 800000;
 int grain_count;
