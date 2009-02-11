@@ -12,20 +12,20 @@ Right now I just copy/paste them into the sketch player and press Play.
 h2. Sketches
 
 h3. Falling Sand
-  Simulates sand falling on various platforms.
-  
-  !http://github.com/jqr/processing_playground/raw/master/screenshots/falling_sand.png!
+Simulates sand falling on various platforms.
+
+!http://github.com/jqr/processing_playground/raw/master/screenshots/falling_sand.png!
   
 h3. Turning Squares
-  Video input is used with a real-time filter.
+Video input is used with a real-time filter.
 
-  !http://github.com/jqr/processing_playground/raw/master/screenshots/turning_squares.png!
+!http://github.com/jqr/processing_playground/raw/master/screenshots/turning_squares.png!
   
 h3. Video Sand
-  Video input is used to interact with falling sand.
+Video input is used to interact with falling sand.
 
-  !http://github.com/jqr/processing_playground/raw/master/screenshots/video_sand.png!
+!http://github.com/jqr/processing_playground/raw/master/screenshots/video_sand.png!
 
 h3. Orbit
-  Orbiting pixels, if it wasn't broken!
+Orbiting pixels, if it wasn't broken!
 
