@@ -1,3 +1,5 @@
+// This sketch is currently broken! :)
+
 int max_bodies = 800000;
 int body_count;
 Body[] bodies = new Body[max_bodies];
@@ -10,10 +12,11 @@ void setup() {
   frameRate(30);
   background(0);
   body_count = 0;
+  stroke(200);
 }
 
 void keyPressed() {
-  bodies[body_count] = new Body(body_count, int(random(width)), int(random(height)), int(random(45) + 5));
+  bodies[body_count] = new Body(body_count, int(random(width)), int(random(height)), 5);
   body_count++;
 }
 
@@ -30,8 +33,8 @@ void draw() {
 }
 
 class Body {
-  int n, c, weight;
-  float x, y, dx, dy;
+  int n, x, y, c, weight;
+  double dx, dy;
   
   Body(int number, int start_x, int start_y, int given_weight) {
     n = number;
@@ -45,59 +48,32 @@ class Body {
     dy = 0;
   }
 
-  void run(int frame) {
+  void run() {
     for(int i=0; i < body_count; i++) {
       if (i != n) {
-        float angle = atan2(y - bodies[i].y, x - bodies[i].x) + PI;
-        float distance = dist(x, y, bodies[i].x, bodies[i].y);
-        float ddx = 300 * cos(angle) * bodies[i].weight / weight / (distance*distance) / body_count;
-        float ddy = 300 * sin(angle) * bodies[i].weight / weight / (distance*distance) / body_count;
-        if (ddx >  0.2) ddx =  0.2;
-        if (ddx < -0.2) ddx = -0.2;
-        if (ddy >  0.2) ddy =  0.2;
-        if (ddy < -0.2) ddy = -0.2;
-        dx += ddx;
-        dy += ddy;
+        float distance = sqrt((x - bodies[i].x)^2 + (y - bodies[i].y)^2);
+        // stroke(int(255/distance));
+        // line(x, y, bodies[i].x, bodies[i].y);
+
+        if (distance > 0) {
+          int xd = (bodies[i].x - x);
+          double ddx = 10 * bodies[i].weight / weight / (xd*xd*xd);
+          int yd = (bodies[i].y - y);
+          double ddy = 10 * bodies[i].weight / weight / (yd*yd*yd);
+      
+          // stroke(200);
+          // line(int(x), int(y), x + dx * 10, y + dy * 10);
+          dx += ddx;
+          dy += ddy;
+        }
       }
     }
-    
-    // float angle = atan2(y - height/2, x - width/2) + PI;
-    // float distance = dist(x, y, width/2, height/2);
-    // float ddx = 10000 * cos(angle) * weight * distance / 500000000;
-    // float ddy = 10000 * sin(angle) * weight * distance / 500000000;
-    // 
-    // dx += ddx;
-    // dy += ddy;
-    
-    float ox = x;
-    float oy = y;
+    int ox = x;
+    int oy = y;
     x += dx;
     y += dy;
-    
-    float Z = 1.0;
-    
-    if (int(x) > width) {
-      x = 2 * width - x;
-      dx = -dx * random(Z);
-    }
-
-    if (x < 0) {
-      x = -x;
-      dx = -dx * random(Z);
-    }
-
-    if (int(y) > height) {
-      y = 2 * height - y;
-      dy = -dy * random(Z);
-    }
-
-    if (y < 0) {
-      y = -y;
-      dy = -dy * random(Z);
-    }
-
-    stroke(c);
+    stroke(100);
     line(ox, oy, x, y);
-    // set(int(x), int(y), c);
+    set(x, y, c);
   }
 }
