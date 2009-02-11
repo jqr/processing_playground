@@ -1,0 +1,26 @@
+Just some hacks related to the Processing language.
+
+You'll need to download Processing to use these sketches:
+  http://www.processing.org/download/
+  
+Right now I just copy/paste them into the sketch player and press Play.
+
+
+Falling Sand
+  Simulates sand falling on various platforms.
+  
+  !screenshots/falling_sand.png!
+  
+Turning Squares
+  Video input is used with a real-time filter.
+
+  !screenshots/turning_squares.png!  
+  
+Video Sand
+  Video input is used to interact with falling sand.
+
+  !screenshots/video_sand.png!
+
+Orbit
+  Orbiting pixels, if it wasn't broken!
+
